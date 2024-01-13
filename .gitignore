@@ -1,3 +1,7 @@
+*.env
+
 api/.idea/
 api/api/bin/
 api/api/obj/
+
+api/api/images
