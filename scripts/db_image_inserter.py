@@ -1,6 +1,7 @@
 import os
 import mysql.connector # pip install mysql-connector-python 
 import uuid
+from datetime import datetime
 
 IMAGES_FOLDER = '' #absolute path to folder containing the images
 SQL_URL = 'localhost'
@@ -11,7 +12,7 @@ SQL_DB_NAME = 'image_gallery'
 SQL_TABLE_NAME = 'images'
 
 show_tables_query = f"SHOW TABLES LIKE '{SQL_TABLE_NAME}'"
-create_table_query = f"CREATE TABLE {SQL_TABLE_NAME}(Id varchar(36) PRIMARY KEY, FilePath varchar(255) NOT NULL, ImageSize Int NOT NULL, ImageName varchar(70) NOT NULL, Type varchar(4) NOT NULL);"
+create_table_query = f"CREATE TABLE {SQL_TABLE_NAME} (Id varchar(36) PRIMARY KEY, FilePath varchar(255) NOT NULL, ImageSize Int NOT NULL, ImageName varchar(70) NOT NULL, Type varchar(4) NOT NULL, AddedDate DATETIME NOT NULL);"
 
 def getImageDetails(image):
 	imageFullPath = f'{IMAGES_FOLDER}\\{image}'
@@ -29,12 +30,15 @@ def fillTable(db, cursor):
 		try:
 			imgData = getImageDetails(img)
 			id = str(uuid.uuid4())
-			query = "INSERT INTO {} (Id, FilePath, ImageSize, ImageName, Type) VALUES (%s, %s, %s, %s, %s)".format(SQL_TABLE_NAME)
-			values = (id, imgData['fullPath'], imgData['size'], imgData['name'], imgData['extension'])
+			current_datetime = datetime.now()
+			formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S") # Format the date and time as "dd/MM/yyyy-hh:mm"
+			
+			query = "INSERT INTO {} (Id, FilePath, ImageSize, ImageName, Type, AddedDate) VALUES (%s, %s, %s, %s, %s, %s)".format(SQL_TABLE_NAME)
+			values = (id, imgData['fullPath'], imgData['size'], imgData['name'], imgData['extension'], formatted_datetime)
 			cursor.execute(query, values)
 			db.commit()
 
-			print(f'"{img}" data was successfully writen to db')
+			print(f'"{img}" data was successfully written to db')
 		except mysql.connector.Error as err:
 			print(f"error: {err}")
 
