@@ -7,12 +7,14 @@ namespace api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class ImagesController: ControllerBase {
+	private const int NumberOfImages = 3;
+	
 	[HttpGet]
-	public ActionResult<string> GetImages() {
+	public ActionResult<string> GetImages([FromQuery] int start = 0) {
 		var dbService = new DbService();
 		var tmpImgList = new List<Image>();
 
-		tmpImgList = dbService.getImages();
+		tmpImgList = dbService.getImages(NumberOfImages, start); //sanitization happens in DbService
 
 		if (tmpImgList == null) {
 			return Ok("{}");
@@ -29,7 +31,7 @@ public class ImagesController: ControllerBase {
 
 		//clean up / remove data that don't need to be send to client
 		var clientReadyImgList = tmpImgList.Select(img => new {
-			dtoImg = new ClientImageDto(img.Id, img.ImageName, img.ImageData)
+			dtoImg = new ClientImageDto(img.Id, $"{img.ImageName}.{img.ImageType}", img.ImageData)
 		}).ToList();
 		
 		// will be used later for caching images on client

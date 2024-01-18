@@ -16,8 +16,8 @@ public class DbService {
 		DbConnectionString = $"Server={server};Port={port};Database={dbName};User={user};Password={password};";
 	}
 
-	public List<Image>? getImages() {
-		var querry = "SELECT * FROM images LIMIT 2";
+	public List<Image>? getImages(int numberOfImgages, int start) {
+		var querry = "SELECT * FROM images ORDER BY AddedDate LIMIT @numberOfImages OFFSET @start;";
 		var returnList = new List<Image>();
 
 		try {
@@ -25,6 +25,9 @@ public class DbService {
 			connection.Open();
 
 			using MySqlCommand command = new MySqlCommand(querry, connection);
+			command.Parameters.AddWithValue("@numberOfImages", numberOfImgages);
+			command.Parameters.AddWithValue("@start", start);
+			
 			using MySqlDataReader reader = command.ExecuteReader();
 
 			while (reader.Read()) {
@@ -46,6 +49,9 @@ public class DbService {
 
 				returnList.Add(image);
 			}
+			
+			reader.Close();
+			connection.Close();
 		}
 		catch (Exception ex) {
 			return null;
