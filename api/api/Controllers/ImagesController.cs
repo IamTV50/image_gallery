@@ -21,12 +21,7 @@ public class ImagesController: ControllerBase {
 		}
 		
 		foreach (var img in tmpImgList) {
-			try {
-				img.ImageData = ImageReader.ReadImageBytes(img.FilePath);
-			}
-			catch (Exception ex) {
-				// TODO - log the error
-			}
+			img.ImageData = ImageReader.ReadImageBytes(img.FilePath);
 		}
 
 		//clean up / remove data that don't need to be send to client
