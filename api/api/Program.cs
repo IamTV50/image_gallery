@@ -11,9 +11,7 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 // Enable CORS
-app.UseCors(builder => builder.WithOrigins(
-	"http://localhost:3000/"
-	).AllowAnyMethod().AllowAnyHeader());
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {

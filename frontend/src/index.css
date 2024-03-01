@@ -1,1 +1,17 @@
+body{
+    text-align: center;
+}
 
+.ImagesGrid{
+    display: block;
+}
+
+.ImageCard{
+    display: inline-block;
+    margin: 0.7em;
+    height: 100%;
+}
+
+img{
+    height: 13em;
+}
