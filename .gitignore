@@ -1,4 +1,5 @@
 *.env
+*.idea
 
 api/.idea/
 api/api/bin/
