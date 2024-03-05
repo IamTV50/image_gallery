@@ -1,4 +1,5 @@
-﻿using api.Models;
+﻿using System.Runtime.InteropServices.JavaScript;
+using api.Models;
 using MySql.Data.MySqlClient;
 
 namespace api.Services;
@@ -16,16 +17,16 @@ public class DbService {
 		DbConnectionString = $"Server={server};Port={port};Database={dbName};User={user};Password={password};";
 	}
 
-	public List<Image>? getImages(int numberOfImgages, int start) {
-		var querry = "SELECT * FROM images ORDER BY AddedDate LIMIT @numberOfImages OFFSET @start;";
+	public List<Image>? getImages(int numberOfImages, int start) {
+		var query = "SELECT * FROM images ORDER BY AddedDate LIMIT @numberOfImages OFFSET @start;";
 		var returnList = new List<Image>();
 
 		try {
 			using MySqlConnection connection = new MySqlConnection(DbConnectionString);
 			connection.Open();
 
-			using MySqlCommand command = new MySqlCommand(querry, connection);
-			command.Parameters.AddWithValue("@numberOfImages", numberOfImgages);
+			using MySqlCommand command = new MySqlCommand(query, connection);
+			command.Parameters.AddWithValue("@numberOfImages", numberOfImages);
 			command.Parameters.AddWithValue("@start", start);
 			
 			using MySqlDataReader reader = command.ExecuteReader();
@@ -58,5 +59,28 @@ public class DbService {
 		}
 
 		return returnList;
+	}
+
+	public int countImages() { 
+		int imgCount = 0;
+		var query = "SELECT COUNT(id) FROM images;";
+
+		try {
+			using MySqlConnection connection = new MySqlConnection(DbConnectionString);
+			connection.Open();
+			using MySqlCommand command = new MySqlCommand(query, connection);
+			using MySqlDataReader reader = command.ExecuteReader();
+			reader.Read();
+
+			imgCount = reader.GetInt32("COUNT(id)");
+
+			reader.Close();
+			connection.Close();
+		}
+		catch (Exception ex) {
+			return 0;
+		}
+
+		return imgCount;
 	}
 }
