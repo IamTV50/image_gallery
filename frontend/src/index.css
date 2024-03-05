@@ -13,5 +13,9 @@ body{
 }
 
 img{
-    height: 13em;
+    height: 48ch;
+}
+
+.hidden{
+    display: none;
 }
