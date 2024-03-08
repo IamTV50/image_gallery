@@ -8,14 +8,18 @@ body{
 
 .ImageCard{
     display: inline-block;
-    margin: 0.7em;
+    margin: 1.5ch;
     height: 100%;
 }
 
 img{
-    height: 48ch;
+    height: 25ch;
 }
 
 .hidden{
     display: none;
+}
+
+#forceExtendPage{
+    margin-top: 40ch;
 }
